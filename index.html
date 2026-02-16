@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Clone - HTML + Tailwind + Alpine.js</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Airbnb Cereal';
+            src: url('assets/fonts/AirbnbCerealVF_W_Wght.8816d9e5c3b6a860636193e36b6ac4e4.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'Airbnb Cereal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white" x-data="airbnbData()">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-100">
+        <div class="max-w-[1760px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
+            <div class="flex items-center justify-center h-20">
+                <!-- Barre de recherche centrée -->
+                <div class="flex items-center border border-gray-300 rounded-full shadow-sm hover:shadow-lg transition-all duration-200 bg-white">
+                    <button class="px-6 py-3 hover:bg-gray-50 rounded-full transition-colors">
+                        <span class="text-sm font-semibold text-gray-800">Où</span>
+                    </button>
+                    <div class="h-8 w-px bg-gray-300"></div>
+                    <button class="px-6 py-3 hover:bg-gray-50 transition-colors">
+                        <span class="text-sm font-semibold text-gray-800">Quand</span>
+                    </button>
+                    <div class="h-8 w-px bg-gray-300"></div>
+                    <button class="flex items-center gap-3 pl-6 pr-2 py-2 hover:bg-gray-50 rounded-full transition-colors">
+                        <span class="text-sm font-semibold text-gray-800">Voyageurs</span>
+                        <div class="bg-orange-500 p-3 rounded-full hover:bg-orange-600 transition-colors">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+
+    <!-- Contenu principal -->
+    <main class="max-w-[2000px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24 py-8">
+        <!-- Section Hôtels Madrid -->
+        <section class="mb-10">
+            <div class="flex items-center gap-2 mb-4">
+                <h2 class="text-[22px] font-semibold text-gray-900">Hôtels à la une (Madrid)</h2>
+                <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="text-gray-500 text-[15px] -mt-2 mb-4">Une collection d'hôtels indépendants et triés sur le volet</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-5 xl:gap-6">
+                <template x-for="hotel in madridHotels" :key="hotel.id">
+                    <div class="cursor-pointer group">
+                        <div class="relative aspect-square rounded-3xl overflow-hidden mb-2">
+                            <img
+                                :src="hotel.image"
+                                :alt="hotel.name"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <div class="space-y-0.5">
+                            <h3 class="font-medium text-[15px] text-gray-900 truncate" x-text="hotel.name"></h3>
+                            <p class="text-gray-900 text-[15px] font-semibold"><span x-text="hotel.price"></span> € <span class="text-gray-500 font-normal">pour 2 nuits</span></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- Section Marrakech -->
+        <section class="mb-10">
+            <div class="flex items-center gap-2 mb-4">
+                <h2 class="text-[22px] font-semibold text-gray-900">Logements disponibles le mois prochain · Marrakech</h2>
+                <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-5 xl:gap-6">
+                <template x-for="apartment in marrakechApartments" :key="apartment.id">
+                    <div class="cursor-pointer group">
+                        <div class="relative aspect-square rounded-3xl overflow-hidden mb-2">
+                            <img
+                                :src="apartment.image"
+                                :alt="apartment.name"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <div class="space-y-0.5">
+                            <h3 class="font-medium text-[15px] text-gray-900 truncate" x-text="apartment.name"></h3>
+                            <p class="text-gray-500 text-[15px]" x-text="apartment.dates"></p>
+                            <p class="text-gray-900 text-[15px] font-semibold"><span x-text="apartment.price"></span> € <span class="text-gray-500 font-normal">pour 2 nuits</span></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- Section Dakar -->
+        <section class="mb-10">
+            <div class="flex items-center gap-2 mb-4">
+                <h2 class="text-[22px] font-semibold text-gray-900">Logements · Dakar</h2>
+                <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-5 xl:gap-6">
+                <template x-for="apartment in dakarApartments" :key="apartment.id">
+                    <div class="cursor-pointer group">
+                        <div class="relative aspect-square rounded-3xl overflow-hidden mb-2">
+                            <img
+                                :src="apartment.image"
+                                :alt="apartment.name"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <div class="space-y-0.5">
+                            <h3 class="font-medium text-[15px] text-gray-900 truncate" x-text="apartment.name"></h3>
+                            <p class="text-gray-900 text-[15px] font-semibold"><span x-text="apartment.price"></span> € <span class="text-gray-500 font-normal">pour 2 nuits</span></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function airbnbData() {
+            return {
+                madridHotels: [
+                    { id: 1, name: "easyHotel Madrid Alcala", price: 218, rating: 4.76, liked: false, image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop" },
+                    { id: 2, name: "Truliving Vallecas by Habyt", price: 224, rating: 4.78, liked: false, image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&h=300&fit=crop" },
+                    { id: 3, name: "The Social Hub Madrid 4 Stars", price: 430, rating: 5.0, liked: false, image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop" },
+                    { id: 4, name: "chic&basic dot", price: 450, rating: 4.89, liked: false, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&h=300&fit=crop" },
+                    { id: 5, name: "NH Madrid Zurbano", price: 395, rating: 4.87, liked: false, image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop" },
+                    { id: 6, name: "Axel Hotel Madrid - Adults Only", price: 558, rating: 4.74, liked: false, image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop" },
+                    { id: 7, name: "Hotel Unico Madrid", price: 485, rating: 4.92, liked: false, image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400&h=300&fit=crop" },
+                ],
+                marrakechApartments: [
+                    { id: 1, name: "Appartement · Marrakech", dates: "23–25 janv.", price: 117, rating: 5.0, favorite: false, liked: false, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop" },
+                    { id: 2, name: "Appartement · Marrakech", dates: "23–25 janv.", price: 145, rating: 5.0, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop" },
+                    { id: 3, name: "Appartement · Marrakech", dates: "23–25 janv.", price: 152, rating: 5.0, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop" },
+                    { id: 4, name: "Appartement · L'Hivernage", dates: "9–11 janv.", price: 96, rating: 4.91, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop" },
+                    { id: 5, name: "Appartement · Guéliz", dates: "30 janv. – 1 févr.", price: 141, rating: 4.98, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop" },
+                    { id: 6, name: "Appartement · Semlalia", dates: "23–25 janv.", price: 90, rating: 4.91, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop" },
+                    { id: 7, name: "Appartement · Médina", dates: "15–17 janv.", price: 125, rating: 4.95, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop" },
+                ],
+                dakarApartments: [
+                    { id: 1, name: "Appartement · Dakar", price: 89, rating: 4.95, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop" },
+                    { id: 2, name: "Appartement · Dakar", price: 120, rating: 4.88, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=300&fit=crop" },
+                    { id: 3, name: "Appartement · Dakar", price: 95, rating: 5.0, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop" },
+                    { id: 4, name: "Appartement · Dakar", price: 110, rating: 4.92, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=400&h=300&fit=crop" },
+                    { id: 5, name: "Appartement · Dakar", price: 135, rating: 4.97, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=300&fit=crop" },
+                    { id: 6, name: "Appartement · Dakar", price: 78, rating: 4.85, favorite: false, liked: false, image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=400&h=300&fit=crop" },
+                    { id: 7, name: "Appartement · Dakar", price: 105, rating: 4.89, favorite: true, liked: true, image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400&h=300&fit=crop" },
+                ],
+
+            }
+        }
+    </script>
+</body>
+</html>

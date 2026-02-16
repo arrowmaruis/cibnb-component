@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récapitulatif de la réservation - Hotelia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Airbnb Cereal';
+            src: url('assets/fonts/AirbnbCerealVF_W_Wght.8816d9e5c3b6a860636193e36b6ac4e4.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'Airbnb Cereal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Custom checkbox/radio styling */
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+            background-color: #f97316;
+            border-color: #f97316;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50" x-data="recapData()">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Back Button on Mobile / Logo on Desktop -->
+                <a href="chambres.html" class="flex items-center">
+                    <svg class="w-5 h-5 lg:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <div class="hidden lg:flex items-center">
+                        <svg class="w-8 h-8 text-orange-500" viewBox="0 0 32 32" fill="currentColor">
+                            <path d="M16 1c2 0 3.46 1.38 3.46 3.5 0 2.12-1.46 3.5-3.46 3.5S12.54 6.62 12.54 4.5C12.54 2.38 14 1 16 1zm0 14.5c-4.8 0-8.66 4.01-8.66 9s3.86 9 8.66 9 8.66-4.01 8.66-9-3.86-9-8.66-9zM16 0C7.16 0 0 7.16 0 16s7.16 16 16 16 16-7.16 16-16S24.84 0 16 0z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-orange-500">hotelia</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-6 lg:py-8 pb-32 lg:pb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_0.6fr] gap-8 lg:gap-16 xl:gap-20">
+            <!-- Left Column - Options -->
+            <div>
+                <h1 class="text-[26px] lg:text-[32px] font-semibold text-gray-900 mb-2">Récapitulatif de votre séjour</h1>
+                <p class="text-base text-gray-600 mb-6 lg:mb-8">Vérifiez les détails et ajoutez des services supplémentaires</p>
+
+                <!-- Votre séjour -->
+                <section class="mb-6 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200">
+                    <h2 class="text-[20px] lg:text-[22px] font-semibold text-gray-900 mb-5">Détails du séjour</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Dates</label>
+                            <p class="text-base font-medium text-gray-900" x-text="booking.dates"></p>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Durée</label>
+                            <p class="text-base font-medium text-gray-900" x-text="booking.nights + ' nuits'"></p>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Invités</label>
+                            <p class="text-base font-medium text-gray-900" x-text="booking.guests + ' personne(s)'"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Chambre sélectionnée -->
+                <section class="mb-6 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200">
+                    <h2 class="text-[20px] lg:text-[22px] font-semibold text-gray-900 mb-5">Chambre sélectionnée</h2>
+                    <div class="flex gap-4">
+                        <img
+                            :src="booking.room.image"
+                            alt="Chambre"
+                            class="w-24 h-24 lg:w-32 lg:h-32 rounded-xl object-cover flex-shrink-0"
+                        >
+                        <div class="flex-1">
+                            <div class="mb-2">
+                                <span class="inline-block px-3 py-1 bg-orange-50 text-orange-600 text-xs font-semibold rounded-full" x-text="booking.room.type"></span>
+                            </div>
+                            <h3 class="font-semibold text-lg text-gray-900 mb-1" x-text="booking.room.title"></h3>
+                            <p class="text-sm text-gray-600 mb-2" x-text="'Chambre ' + booking.room.number"></p>
+                            <p class="text-base font-semibold text-gray-900">
+                                <span x-text="booking.room.price.toLocaleString()"></span> FCFA / nuit
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services supplémentaires -->
+                <section class="mb-6 bg-white rounded-2xl p-5 lg:p-6 border border-gray-200">
+                    <h2 class="text-[20px] lg:text-[22px] font-semibold text-gray-900 mb-5">Services supplémentaires</h2>
+
+                    <!-- Service navette -->
+                    <div class="mb-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-4">Mode d'arrivée</h3>
+                        <div class="space-y-3">
+                            <label
+                                class="flex items-start gap-3 cursor-pointer p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50/30 transition-all"
+                                :class="!booking.extras.shuttle ? 'border-orange-500 bg-orange-50/50' : ''"
+                            >
+                                <input
+                                    type="radio"
+                                    x-model="booking.extras.shuttle"
+                                    :value="false"
+                                    class="mt-0.5 w-5 h-5 text-orange-500 focus:ring-orange-500 cursor-pointer"
+                                >
+                                <div class="flex-1">
+                                    <span class="text-base font-medium text-gray-900">Arrivée par mes propres moyens</span>
+                                    <p class="text-sm text-gray-600 mt-1">Je me rendrai à l'hôtel par moi-même</p>
+                                    <p class="text-sm font-semibold text-green-600 mt-2">Gratuit</p>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-start gap-3 cursor-pointer p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50/30 transition-all"
+                                :class="booking.extras.shuttle ? 'border-orange-500 bg-orange-50/50' : ''"
+                            >
+                                <input
+                                    type="radio"
+                                    x-model="booking.extras.shuttle"
+                                    :value="true"
+                                    class="mt-0.5 w-5 h-5 text-orange-500 focus:ring-orange-500 cursor-pointer"
+                                >
+                                <div class="flex-1">
+                                    <span class="text-base font-medium text-gray-900">Service navette</span>
+                                    <p class="text-sm text-gray-600 mt-1">Un chauffeur viendra vous chercher à l'aéroport ou à la gare</p>
+                                    <p class="text-sm font-semibold text-gray-900 mt-2">+ 15 000 FCFA (par trajet)</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Options navette -->
+                        <div x-show="booking.extras.shuttle" x-transition class="mt-4 pl-8 space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    x-model="booking.extras.shuttleOptions.pickup"
+                                    class="w-5 h-5 text-orange-500 focus:ring-orange-500 rounded cursor-pointer"
+                                >
+                                <span class="text-sm text-gray-700">Prise en charge à l'arrivée</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    x-model="booking.extras.shuttleOptions.dropoff"
+                                    class="w-5 h-5 text-orange-500 focus:ring-orange-500 rounded cursor-pointer"
+                                >
+                                <span class="text-sm text-gray-700">Dépose au départ</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Guide touristique -->
+                    <div class="pt-5 border-t border-gray-200">
+                        <h3 class="text-base font-semibold text-gray-900 mb-4">Visite touristique</h3>
+                        <label
+                            class="flex items-start gap-3 cursor-pointer p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50/30 transition-all"
+                            :class="booking.extras.tourGuide ? 'border-orange-500 bg-orange-50/50' : ''"
+                        >
+                            <input
+                                type="checkbox"
+                                x-model="booking.extras.tourGuide"
+                                class="mt-0.5 w-5 h-5 text-orange-500 focus:ring-orange-500 rounded cursor-pointer"
+                            >
+                            <div class="flex-1">
+                                <span class="text-base font-medium text-gray-900 block mb-2">Guide touristique privé</span>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    Circuit personnalisé selon vos centres d'intérêt avec un guide professionnel
+                                </p>
+                                <p class="text-sm font-semibold text-gray-900">+ 30 000 FCFA (par jour)</p>
+                            </div>
+                        </label>
+
+                        <!-- Durée du guide -->
+                        <div x-show="booking.extras.tourGuide" x-transition class="mt-4 pl-8">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre de jours</label>
+                            <select
+                                x-model="booking.extras.tourGuideDays"
+                                class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
+                            >
+                                <option :value="1">1 jour</option>
+                                <option :value="2">2 jours</option>
+                                <option :value="3">3 jours</option>
+                                <option x-show="booking.nights > 3" :value="booking.nights" x-text="booking.nights + ' jours (tout le séjour)'"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Petit-déjeuner supplémentaire -->
+                    <div class="pt-5 border-t border-gray-200 mt-5">
+                        <h3 class="text-base font-semibold text-gray-900 mb-4">Restauration</h3>
+                        <label
+                            class="flex items-start gap-3 cursor-pointer p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50/30 transition-all"
+                            :class="booking.extras.extraBreakfast > 0 ? 'border-orange-500 bg-orange-50/50' : ''"
+                        >
+                            <input
+                                type="checkbox"
+                                x-model="booking.extras.extraBreakfastEnabled"
+                                class="mt-0.5 w-5 h-5 text-orange-500 focus:ring-orange-500 rounded cursor-pointer"
+                            >
+                            <div class="flex-1">
+                                <span class="text-base font-medium text-gray-900 block mb-2">Petit-déjeuner pour personne supplémentaire</span>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    1 petit-déjeuner inclus par chambre. Ajoutez pour vos accompagnants.
+                                </p>
+                                <p class="text-sm font-semibold text-gray-900">+ 5 000 FCFA / personne / jour</p>
+                            </div>
+                        </label>
+
+                        <!-- Nombre de personnes supplémentaires -->
+                        <div x-show="booking.extras.extraBreakfastEnabled" x-transition class="mt-4 pl-8">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre de personnes supplémentaires</label>
+                            <select
+                                x-model="booking.extras.extraBreakfast"
+                                class="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
+                            >
+                                <option :value="0">Aucune</option>
+                                <option :value="1">1 personne</option>
+                                <option :value="2">2 personnes</option>
+                                <option :value="3">3 personnes</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column - Summary -->
+            <div class="lg:sticky lg:top-24 lg:self-start">
+                <div class="bg-white rounded-2xl p-5 lg:p-6 border-2 border-gray-200 shadow-xl">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6">Résumé des coûts</h3>
+
+                    <!-- Base costs -->
+                    <div class="space-y-4 mb-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-700 font-medium" x-text="booking.room.title"></p>
+                                <p class="text-xs text-gray-500" x-text="booking.room.price.toLocaleString() + ' FCFA x ' + booking.nights + ' nuits'"></p>
+                            </div>
+                            <span class="text-base font-semibold text-gray-900" x-text="(booking.room.price * booking.nights).toLocaleString() + ' FCFA'"></span>
+                        </div>
+                    </div>
+
+                    <!-- Services supplémentaires -->
+                    <div x-show="hasExtras" class="pt-4 border-t border-gray-200 mb-5">
+                        <p class="text-sm font-semibold text-gray-700 mb-3">Services supplémentaires</p>
+                        <div class="space-y-3">
+                            <!-- Navette -->
+                            <div x-show="booking.extras.shuttle" class="flex justify-between items-start text-sm">
+                                <div>
+                                    <p class="text-gray-700">Service navette</p>
+                                    <p class="text-xs text-gray-500" x-text="shuttleDetails"></p>
+                                </div>
+                                <span class="font-medium text-gray-900" x-text="shuttleCost.toLocaleString() + ' FCFA'"></span>
+                            </div>
+
+                            <!-- Guide -->
+                            <div x-show="booking.extras.tourGuide" class="flex justify-between items-start text-sm">
+                                <div>
+                                    <p class="text-gray-700">Guide touristique</p>
+                                    <p class="text-xs text-gray-500" x-text="booking.extras.tourGuideDays + ' jour(s)'"></p>
+                                </div>
+                                <span class="font-medium text-gray-900" x-text="tourGuideCost.toLocaleString() + ' FCFA'"></span>
+                            </div>
+
+                            <!-- Petit-déjeuner extra -->
+                            <div x-show="booking.extras.extraBreakfast > 0" class="flex justify-between items-start text-sm">
+                                <div>
+                                    <p class="text-gray-700">Petit-déjeuner supplémentaire</p>
+                                    <p class="text-xs text-gray-500" x-text="booking.extras.extraBreakfast + ' pers. x ' + booking.nights + ' nuits'"></p>
+                                </div>
+                                <span class="font-medium text-gray-900" x-text="breakfastCost.toLocaleString() + ' FCFA'"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="pt-5 border-t-2 border-gray-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg font-semibold text-gray-900">Total</span>
+                            <span class="text-2xl font-bold text-gray-900" x-text="totalCost.toLocaleString() + ' FCFA'"></span>
+                        </div>
+                        <p class="text-xs text-gray-500 text-right">Taxes et frais inclus</p>
+                    </div>
+
+                    <!-- Économies -->
+                    <div x-show="savings > 0" class="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm font-semibold text-green-700">Petit-déjeuner inclus dans le tarif</span>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <a
+                        href="booking.html"
+                        class="block w-full mt-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-xl font-semibold text-center transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                    >
+                        Continuer vers le paiement
+                    </a>
+                    <p class="text-xs text-center text-gray-500 mt-3">Aucun montant ne vous sera débité maintenant</p>
+                </div>
+
+                <!-- Politique d'annulation -->
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-2">Annulation gratuite</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Annulation gratuite jusqu'à 24h avant l'arrivée. Après ce délai, la première nuit vous sera facturée.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Footer -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 px-4 py-4 z-50 shadow-2xl">
+        <div class="flex items-center justify-between mb-2">
+            <div>
+                <p class="text-xs text-gray-500">Total du séjour</p>
+                <p class="text-xl font-bold text-gray-900" x-text="totalCost.toLocaleString() + ' FCFA'"></p>
+            </div>
+            <a
+                href="booking.html"
+                class="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold transition-all shadow-md"
+            >
+                Continuer
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function recapData() {
+            return {
+                booking: {
+                    dates: '10 Fév - 13 Fév',
+                    nights: 3,
+                    guests: 1,
+                    room: {
+                        number: '177',
+                        type: 'Appartement',
+                        title: 'Appartement 2 pièces',
+                        price: 61000,
+                        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=400&fit=crop'
+                    },
+                    extras: {
+                        shuttle: false,
+                        shuttleOptions: {
+                            pickup: true,
+                            dropoff: false
+                        },
+                        tourGuide: false,
+                        tourGuideDays: 1,
+                        extraBreakfastEnabled: false,
+                        extraBreakfast: 0
+                    }
+                },
+                get shuttleCost() {
+                    if (!this.booking.extras.shuttle) return 0;
+                    let trips = 0;
+                    if (this.booking.extras.shuttleOptions.pickup) trips++;
+                    if (this.booking.extras.shuttleOptions.dropoff) trips++;
+                    return trips * 15000;
+                },
+                get shuttleDetails() {
+                    if (!this.booking.extras.shuttle) return '';
+                    const trips = [];
+                    if (this.booking.extras.shuttleOptions.pickup) trips.push('arrivée');
+                    if (this.booking.extras.shuttleOptions.dropoff) trips.push('départ');
+                    return trips.join(' + ');
+                },
+                get tourGuideCost() {
+                    return this.booking.extras.tourGuide ? this.booking.extras.tourGuideDays * 30000 : 0;
+                },
+                get breakfastCost() {
+                    return this.booking.extras.extraBreakfast * this.booking.nights * 5000;
+                },
+                get roomTotal() {
+                    return this.booking.room.price * this.booking.nights;
+                },
+                get totalCost() {
+                    return this.roomTotal + this.shuttleCost + this.tourGuideCost + this.breakfastCost;
+                },
+                get hasExtras() {
+                    return this.booking.extras.shuttle || this.booking.extras.tourGuide || this.booking.extras.extraBreakfast > 0;
+                },
+                get savings() {
+                    // Petit-déjeuner inclus = économie de 5000 FCFA x nuits x 1 personne
+                    return 5000 * this.booking.nights;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
