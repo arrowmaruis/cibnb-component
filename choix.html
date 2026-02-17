@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Que souhaitez-vous proposer ?</title>
+    <style>
+        /* Classe pour l'état sélectionné sur les cartes */
+        .selected-card {
+            border-color: black !important;
+            border-width: 2px !important;
+            background-color: #f9f9f9;
+        }
+        /* Classe pour activer le bouton en bleu nuit après sélection */
+        .btn-active {
+            background-color: #1e293b !important; /* Bleu nuit */
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center font-sans antialiased">
+
+    <div class="bg-white w-full max-w-[1000px] rounded-3xl shadow-xl overflow-hidden flex flex-col relative mx-4">
+        
+        <button class="absolute top-6 left-6 text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <div class="px-12 pt-16 pb-12 flex-1">
+            <h1 class="text-3xl font-semibold text-[#222222] text-center mb-16">
+                Que souhaitez-vous proposer ?
+            </h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[850px] mx-auto">
+                
+                <div onclick="selectOption(this)" class="selectable-card group border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer">
+                    <div class="flex-1 flex items-center justify-center">
+                        <img src="service-img/logement.png" alt="Logement" class="w-24 h-24 object-contain">
+                    </div>
+                    <p class="font-semibold text-gray-800 text-lg">Logement</p>
+                </div>
+
+                <div onclick="selectOption(this)" class="selectable-card group border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer">
+                    <div class="flex-1 flex items-center justify-center">
+                        <img src="service-img/experience.avif" alt="Expérience" class="w-24 h-24 object-contain">
+                    </div>
+                    <p class="font-semibold text-gray-800 text-lg">Expérience</p>
+                </div>
+
+                <div onclick="selectOption(this)" class="selectable-card group border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer">
+                    <div class="flex-1 flex items-center justify-center">
+                        <img src="service-img/service.avif" alt="Service" class="w-24 h-24 object-contain">
+                    </div>
+                    <p class="font-semibold text-gray-800 text-lg text-center">Service</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 p-6 flex justify-end bg-white">
+            <button id="nextBtn" class="bg-[#DDDDDD] text-white px-8 py-3 rounded-xl font-bold text-base transition-all shadow-sm cursor-not-allowed">
+                Suivant
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(element) {
+            // 1. Enlever la sélection visuelle des autres cartes
+            document.querySelectorAll('.selectable-card').forEach(card => {
+                card.classList.remove('selected-card');
+            });
+            
+            // 2. Ajouter la sélection sur la carte cliquée
+            element.classList.add('selected-card');
+            
+            // 3. Activer le bouton Suivant (passage au bleu nuit)
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.classList.add('btn-active');
+            nextBtn.classList.remove('cursor-not-allowed');
+        }
+    </script>
+
+</body>
+</html>
