@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Style - Création d'offre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Styles utilitaires */
+        .btn-disabled {
+            background-color: #DDDDDD;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .add-offer-card {
+            transition: border-color 0.2s ease, background-color 0.1s ease;
+        }
+        .add-offer-card:active {
+            transform: scale(0.99);
+        }
+
+        /* Masquer la scrollbar de la modale tout en gardant le scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col justify-between text-[#222222]">
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="flex items-center justify-between px-6 py-6 md:px-12 bg-white shrink-0 z-10 relative">
+        <button class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </button>
+
+        <div class="hidden md:block text-sm font-semibold text-gray-800">
+            Offres <span class="font-medium text-gray-500">Étape 5 sur 6</span>
+        </div>
+        
+        <button class="px-4 py-2 bg-[#F7F7F7] hover:bg-[#EBEBEB] text-sm font-semibold rounded-full transition-colors">
+            Enregistrer et quitter
+        </button>
+    </header>
+
+    <!-- ================= CONTENU PRINCIPAL ================= -->
+    <main class="flex-1 overflow-y-auto w-full max-w-[640px] mx-auto flex flex-col items-center justify-center px-6 md:px-8 pb-10">
+        
+        <div class="text-center max-w-lg mb-10">
+            <h1 class="text-[32px] font-semibold leading-tight mb-4 text-[#222222]">
+                Vos offres
+            </h1>
+            <p class="text-[#717171] text-lg leading-relaxed">
+                Ajoutez au moins une option. Commencez par une option abordable pour attirer plus de voyageurs.
+            </p>
+        </div>
+
+        <!-- Bouton pour ouvrir la modale -->
+        <button id="openModalBtn" class="add-offer-card w-full border border-[#DDDDDD] rounded-xl p-4 flex items-center gap-4 hover:border-black group text-left bg-white">
+            <div class="w-12 h-12 bg-[#F7F7F7] rounded-lg flex items-center justify-center shrink-0 group-hover:bg-[#EBEBEB] transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
+            <span class="text-lg font-semibold text-[#222222]">
+                Ajouter ma première offre
+            </span>
+        </button>
+
+    </main>
+
+    <!-- ================= FOOTER DE PAGE ================= -->
+    <footer class="bg-white border-t border-gray-200 px-6 py-4 md:px-12 flex items-center justify-between shrink-0 sticky bottom-0 w-full z-10">
+        <div class="absolute top-0 left-0 h-[2px] bg-gray-200 w-full">
+            <div class="h-full bg-black w-[83%]"></div>
+        </div>
+        
+        <button class="text-sm font-semibold underline text-[#222222] hover:bg-[#F7F7F7] px-4 py-2 rounded-lg -ml-4 transition-colors">
+            Retour
+        </button>
+        
+        <button class="btn-disabled px-8 py-3.5 rounded-lg font-semibold" disabled>
+            Suivant
+        </button>
+    </footer>
+
+    <!-- ================= MODALE (POPUP) ================= -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+        
+        <!-- Carte Modale -->
+        <div id="modalContent" class="bg-white w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90vh] scale-95 transition-transform duration-200">
+            
+            <!-- Header Modale -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+                <button id="closeModalBtn" class="p-2 rounded-full hover:bg-gray-100 -ml-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <h3 class="font-bold text-base">Ajoutez des informations</h3>
+                <div class="w-8"></div> <!-- Spacer pour centrer le titre -->
+            </div>
+
+            <!-- Corps Modale (Scrollable) -->
+            <div class="p-6 overflow-y-auto custom-scrollbar">
+                
+                <!-- Photo & Titre -->
+                <div class="flex flex-col items-center mb-8">
+                    <!-- Photo Circle -->
+                    <div class="relative w-32 h-32 mb-4 group cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1596462502278-27bfdd403348?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Maquillage" class="w-full h-full object-cover rounded-full border border-gray-200 shadow-sm">
+                        <div class="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow-md border border-gray-100 hover:bg-gray-50 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Titre Input -->
+                    <input type="text" value="maquillage" class="text-center text-3xl font-semibold text-[#222222] border-none focus:ring-0 focus:outline-none w-full hover:bg-gray-50 rounded-lg p-2 transition-colors placeholder-gray-300" placeholder="Titre de l'offre">
+                </div>
+
+                <!-- Formulaire -->
+                <div class="space-y-4">
+                    
+                    <!-- Description -->
+                    <div class="border border-gray-400 rounded-xl px-4 py-3 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
+                        <label class="block text-xs text-gray-500 font-semibold mb-1">Description</label>
+                        <textarea rows="3" class="w-full text-base text-gray-700 outline-none resize-none placeholder-gray-400" placeholder="Ajouter une description"></textarea>
+                    </div>
+
+                    <!-- Type de service -->
+                    <div class="border border-gray-400 rounded-xl px-4 py-4 flex items-center justify-between cursor-pointer hover:border-black transition-colors">
+                        <span class="text-base font-medium text-gray-700">Type de service</span>
+                        <div class="flex items-center gap-2 text-gray-500">
+                            <span class="text-sm">Sélectionner</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <!-- Prix -->
+                    <div class="border border-gray-400 rounded-xl px-4 py-3 flex items-center justify-between focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
+                        <div class="flex flex-col">
+                            <label class="block text-xs text-gray-500 font-semibold mb-0.5">Prix</label>
+                            <div class="flex items-center">
+                                <span class="text-xl font-semibold mr-1">$</span>
+                                <input type="number" value="0" class="w-24 text-xl font-semibold outline-none text-[#222222] placeholder-gray-300">
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <select class="appearance-none bg-transparent pl-2 pr-8 py-1 text-sm font-medium text-gray-700 focus:outline-none cursor-pointer">
+                                <option>Par voyageur</option>
+                                <option>Forfait global</option>
+                                <option>Par heure</option>
+                            </select>
+                            <svg class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Modale -->
+            <div class="border-t border-gray-200 p-6 flex items-center justify-between shrink-0">
+                <button class="text-sm font-semibold underline text-[#222222] hover:bg-gray-50 px-3 py-2 rounded-lg -ml-3 transition-colors">
+                    Supprimer
+                </button>
+                <button id="doneBtn" class="bg-[#222222] hover:bg-black text-white px-6 py-3 rounded-lg text-base font-semibold transition-transform active:scale-95">
+                    Terminé
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const doneBtn = document.getElementById('doneBtn');
+
+        function openModal() {
+            modalOverlay.classList.remove('hidden');
+            // Petit délai pour permettre à la transition CSS de se lancer
+            setTimeout(() => {
+                modalOverlay.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            // Attendre la fin de la transition avant de masquer
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+            }, 200);
+        }
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        doneBtn.addEventListener('click', closeModal);
+
+        // Fermer si on clique en dehors de la modale
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

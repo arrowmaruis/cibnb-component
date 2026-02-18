@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Style - Étape 2 avec Modale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Styles spécifiques pour les cartes de sélection */
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.2, 0.0, 0.2, 1);
+        }
+
+        .option-card.selected {
+            border: 2px solid black;
+            background-color: #F7F7F7;
+            padding: 23px; /* Compensation pour la bordure */
+        }
+        
+        .option-card:active {
+            transform: scale(0.99);
+        }
+
+        /* Animation de la modale */
+        @keyframes modalEnter {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .modal-animate {
+            animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Cacher la scrollbar quand la modale est ouverte */
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col justify-between text-[#222222] relative">
+
+    <!-- Navbar -->
+    <header class="flex items-center justify-between px-6 py-8 md:px-12 bg-white shrink-0 z-10">
+        <button class="w-8 h-8 rounded-full border border-transparent hover:bg-gray-100 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </button>
+        <div class="hidden md:block text-sm font-semibold text-center">
+            Lieu <span class="mx-1 text-gray-400">•</span> Étape 2 sur 6
+        </div>
+        <button class="px-4 py-2 bg-[#F7F7F7] hover:bg-[#EBEBEB] text-sm font-semibold rounded-full transition-colors border border-transparent">
+            Enregistrer et quitter
+        </button>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 overflow-y-auto px-6 md:px-12 w-full max-w-[680px] mx-auto flex flex-col items-center pt-8 pb-20">
+        <div class="text-center mb-10">
+            <h1 class="text-[26px] md:text-[32px] font-semibold leading-snug mb-3 text-[#222222]">
+                Où fournissez-vous votre service ?
+            </h1>
+            <p class="text-gray-500 text-lg">
+                Sélectionnez une option ou les deux.
+            </p>
+        </div>
+
+        <div class="w-full space-y-4">
+            <!-- Option 1 -->
+            <div id="card1" class="option-card w-full p-6 border border-gray-300 rounded-xl cursor-pointer hover:border-black group relative" onclick="selectCard(this)">
+                <h3 class="font-semibold text-lg mb-1">Vous rejoignez les voyageurs</h3>
+                <p class="text-gray-500 text-sm">Définissez votre zone de service</p>
+            </div>
+
+            <!-- Option 2 (Déclenche la modale) -->
+            <div id="card2" class="option-card w-full p-6 border border-gray-300 rounded-xl cursor-pointer hover:border-black group relative" onclick="handleLocationCardClick(this)">
+                <h3 class="font-semibold text-lg mb-1">Les voyageurs vous rejoignent</h3>
+                <p class="text-gray-500 text-sm">Ajouter un lieu de rencontre</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 px-6 py-4 md:px-12 flex items-center justify-between shrink-0 sticky bottom-0 w-full z-10">
+        <div class="absolute top-0 left-0 h-[2px] bg-black w-[33%] transition-all duration-500" id="progressBar"></div>
+        <button class="text-sm font-semibold underline text-[#222222] hover:bg-[#F7F7F7] px-4 py-2 rounded-lg -ml-4 transition-colors">
+            Retour
+        </button>
+        <button id="nextBtn" class="bg-[#DDDDDD] text-white px-8 py-3.5 rounded-lg font-semibold cursor-not-allowed transition-all duration-200" disabled>
+            Suivant
+        </button>
+    </footer>
+
+    <!-- MODALE LOCATION -->
+    <div id="locationModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+        <!-- Backdrop flou -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
+        
+        <!-- Conteneur de la modale -->
+        <div class="flex items-center justify-center min-h-screen px-4 py-6 pointer-events-none">
+            <!-- Boîte blanche -->
+            <div class="bg-white w-full max-w-[560px] rounded-2xl shadow-2xl pointer-events-auto relative modal-animate transform transition-all p-0 overflow-hidden flex flex-col max-h-[90vh]">
+                
+                <!-- Header Modale avec croix -->
+                <div class="px-6 py-4 flex items-center shrink-0">
+                    <button onclick="closeModal()" class="w-8 h-8 -ml-2 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;"><path d="m6 6 20 20"></path><path d="m26 6-20 20"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Corps de la modale -->
+                <div class="px-8 pb-10 flex flex-col items-center text-center overflow-y-auto">
+                    <h2 class="text-2xl font-bold text-[#222222] mb-2">
+                        Où les voyageurs doivent-ils vous retrouver ?
+                    </h2>
+                    <p class="text-gray-500 text-[16px] mb-8">
+                        Les voyageurs verront cette adresse sur votre annonce.
+                    </p>
+
+                    <!-- Input Recherche -->
+                    <div class="w-full relative">
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 18px; width: 18px; stroke: currentcolor; stroke-width: 4; overflow: visible;"><path fill="none" d="M13 24a11 11 0 1 0 0-22 11 11 0 0 0 0 22zm8-3 9 9"></path></svg>
+                        </div>
+                        <input type="text" 
+                               placeholder="Saisir une adresse" 
+                               class="w-full py-4 pl-12 pr-6 rounded-full border border-gray-400 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-lg font-medium transition-shadow"
+                               autofocus
+                        >
+                    </div>
+
+                    <!-- Liste résultats simulés (optionnel pour l'effet visuel) -->
+                    <div class="w-full mt-2 hidden">
+                        <!-- Vide pour l'instant -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const modal = document.getElementById('locationModal');
+        const backdrop = document.getElementById('modalBackdrop');
+        const body = document.body;
+        
+        // Gestion de la sélection simple (Carte 1)
+        function selectCard(element) {
+            toggleCardStyle(element);
+            checkValidation();
+        }
+
+        // Gestion de la carte 2 (Modale)
+        function handleLocationCardClick(element) {
+            // Sélectionner visuellement la carte
+            if (!element.classList.contains('selected')) {
+                toggleCardStyle(element);
+            }
+            // Ouvrir la modale
+            openModal();
+            checkValidation();
+        }
+
+        // Logique visuelle de sélection
+        function toggleCardStyle(element) {
+            element.classList.toggle('selected');
+            
+            if (element.classList.contains('selected')) {
+                element.classList.remove('border-gray-300', 'p-6');
+            } else {
+                element.classList.add('border-gray-300', 'p-6');
+            }
+        }
+
+        // Fonctions Modale
+        function openModal() {
+            modal.classList.remove('hidden');
+            // Petit délai pour permettre la transition d'opacité
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+            }, 10);
+            body.classList.add('modal-open');
+        }
+
+        function closeModal() {
+            backdrop.classList.add('opacity-0');
+            // Attendre la fin de la transition pour cacher
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        // Validation du formulaire global
+        function checkValidation() {
+            const selectedCards = document.querySelectorAll('.option-card.selected');
+            
+            if (selectedCards.length > 0) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-[#DDDDDD]', 'cursor-not-allowed', 'text-white');
+                nextBtn.classList.add('bg-[#222222]', 'text-white', 'hover:bg-black', 'hover:scale-[1.02]');
+                progressBar.style.width = '35%';
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('bg-[#DDDDDD]', 'cursor-not-allowed', 'text-white');
+                nextBtn.classList.remove('bg-[#222222]', 'hover:bg-black', 'hover:scale-[1.02]');
+                progressBar.style.width = '33%';
+            }
+        }
+    </script>
+</body>
+</html>
