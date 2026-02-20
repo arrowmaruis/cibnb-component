@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Interface Services Airbnb</title>
+</head>
+<body class="bg-white p-6 md:p-10 font-sans antialiased">
+
+    <header class="max-w-[1300px] mx-auto flex justify-between items-center mb-16">
+        <div class="text-[#FF385C]">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 fill-current"><path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 2.472.96 3.396l.01.415.001.228c0 4.062-2.877 6.478-6.357 6.478-2.224 0-4.556-1.258-6.709-3.386l-.257-.26-.172-.179h-.011l-.176.185c-2.044 2.1-4.392 3.42-6.72 3.636l-.248.015-.243.004c-3.48 0-6.357-2.416-6.357-6.478 0-1.212.27-2.316.824-3.468l.11-.223.145-.353c.987-2.296 5.147-11.006 7.101-14.837l.533-1.024C12.537 1.963 13.992 1 16 1zm0 2c-1.239 0-2.053.539-3.003 2.223l-.533 1.025C10.51 9.078 6.35 17.788 5.363 20.084l-.145.353c-.466 1.114-.64 1.841-.665 2.531l-.003.228c0 2.845 2.022 4.478 4.357 4.478 1.705 0 3.614-.99 5.607-2.903l.422-.423L16 23.32l1.063 1.03.423.422c1.993 1.914 3.902 2.903 5.607 2.903 2.335 0 4.357-1.633 4.357-4.478 0-1.123-.217-1.926-.662-2.983l-.151-.353c-.987-2.296-5.147-11.006-7.101-14.837l-.533-1.024C18.053 3.539 17.24 3 16 3z"/></svg>
+        </div>
+        <button class="bg-[#F3F4F6] hover:bg-gray-200 text-gray-900 px-6 py-2 rounded-2xl font-semibold text-sm transition-all shadow-sm">
+            Retour
+        </button>
+    </header>
+
+    <section class="max-w-[1300px] mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-semibold text-[#222222] tracking-tight">
+            Quel service souhaitez-vous proposer ?
+        </h1>
+    </section>
+
+    <main class="max-w-[1300px] mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+        
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/cuisine.avif" alt="Chef privé" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Chef privé</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/coaching.avif" alt="Coaching" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Coaching privé</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/coiffure.avif" alt="Coiffure" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Coiffure</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/vernis.avif" alt="Mani-pédi" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Mani-pédi</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/makeup.avif" alt="Maquillage" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Maquillage</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/massage.avif" alt="Massage" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Massage</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/photo.avif" alt="Photographie" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Photographie</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/nourriture.avif" alt="Plats préparés" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Plats préparés</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/traiteur.avif" alt="Traiteur" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Service de traiteur</p>
+        </div>
+
+        <div class="group border border-gray-200 rounded-[2rem] p-6 flex flex-col items-center justify-between aspect-[0.9/1] hover:border-black transition-all cursor-pointer bg-white">
+            <div class="flex-1 flex items-center justify-center w-full p-2">
+                <img src="service-img/bienetre.avif" alt="Soins" class="max-w-full max-h-[120px] object-contain">
+            </div>
+            <p class="font-semibold text-[#222222] text-center text-base mt-2">Soins bien-être</p>
+        </div>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajout Profils</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #F7F7F7;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .floating-card {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.4s ease;
+        }
+        
+        .floating-container:hover .card-left {
+            transform: rotate(-15deg) translateX(-10px) translateY(5px);
+        }
+        .floating-container:hover .card-right {
+            transform: rotate(15deg) translateX(10px) translateY(5px);
+        }
+        .floating-container:hover .card-center {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .profile-item {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== MODAL ===== */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-panel {
+            transform: translateY(30px) scale(0.96);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+        }
+        .modal-backdrop.active .modal-panel {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* Style select custom */
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0; height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #6b7280;
+            pointer-events: none;
+        }
+
+        .input-field {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: #222;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .modal-confirm-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+        }
+        .modal-confirm-btn:not(:disabled) {
+            background: #222;
+        }
+        .modal-confirm-btn:not(:disabled):hover {
+            background: #000;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center p-4">
+
+    <!-- Container Principal -->
+    <div class="bg-white w-full max-w-[850px] h-[600px] rounded-xl flex flex-col relative border border-gray-200 overflow-hidden shadow-sm">
+        
+        <!-- Header -->
+        <div class="h-20 px-6 md:px-8 flex items-center justify-between shrink-0 bg-white z-20">
+            <button class="p-2 rounded-full hover:bg-gray-100 transition cursor-pointer text-gray-800 -ml-2">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 4; overflow: visible;"><g fill="none"><path d="m20 28-11.29289322-11.2928932c-.39052429-.3905243-.39052429-1.0236893 0-1.4142136l11.29289322-11.2928932"></path></g></svg>
+            </button>
+            <div class="hidden md:block text-xs font-semibold text-gray-800 uppercase tracking-wider">
+                À propos de vous &nbsp;•&nbsp; Étape 1 sur 6
+            </div>
+            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-full transition text-gray-800">
+                Enregistrer et quitter
+            </button>
+        </div>
+
+        <!-- Contenu Principal -->
+        <div class="flex-1 overflow-y-auto flex flex-col items-center justify-center text-center px-6 md:px-20 pb-10">
+            <div class="max-w-lg w-full flex flex-col items-center fade-in-up">
+                
+                <h1 class="text-3xl md:text-[32px] font-bold text-gray-900 mb-4 leading-tight">
+                    Ajoutez vos profils en ligne
+                </h1>
+                
+                <p class="text-gray-500 text-base md:text-lg mb-10 leading-relaxed max-w-md mx-auto">
+                    Pour nous aider à confirmer vos compétences, ajoutez des liens vers vos commentaires, les articles de presse que vous avez reçus et votre site web. Les voyageurs ne les verront pas.
+                </p>
+
+                <!-- Illustration Cartes Flottantes -->
+                <div class="floating-container relative h-24 w-64 mb-10 flex justify-center items-center">
+                    <div class="card-left floating-card absolute w-16 h-16 bg-white rounded-xl flex items-center justify-center z-10 transform -rotate-12 -translate-x-12 border border-gray-100">
+                        <svg class="w-8 h-8 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </div>
+                    <div class="card-center floating-card absolute w-18 h-18 bg-white rounded-xl flex items-center justify-center z-20 transform scale-110 border border-gray-100">
+                         <svg class="w-9 h-9" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                    </div>
+                    <div class="card-right floating-card absolute w-16 h-16 bg-white rounded-xl flex items-center justify-center z-10 transform rotate-12 translate-x-12 border border-gray-100">
+                        <svg class="w-8 h-8 text-[#FF1A1A]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Zone Profils Ajoutés -->
+                <div id="profilesList" class="w-full mb-6 space-y-3 hidden"></div>
+
+                <!-- Bouton Principal -->
+                <button onclick="openModal()" class="bg-black hover:bg-gray-800 text-white font-semibold py-3.5 px-6 rounded-full transition transform active:scale-95 flex items-center gap-2">
+                    <span class="text-xl leading-none font-light">+</span>
+                    Ajouter un profil
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="h-24 px-6 md:px-8 border-t border-gray-200 flex items-center justify-between shrink-0 bg-white">
+            <button class="font-semibold text-gray-800 underline text-sm hover:text-gray-600 transition">
+                Ignorer
+            </button>
+            <button id="nextBtn" class="bg-[#dddddd] text-white px-8 py-3.5 rounded-lg font-semibold text-lg transition cursor-not-allowed" disabled>
+                Suivant
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL FENÊTRE CONTEXTUELLE ===== -->
+    <div id="modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-panel bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+
+            <!-- Header modal -->
+            <div class="flex items-center justify-between px-6 pt-6 pb-2">
+                <h2 class="text-xl font-bold text-gray-900">Ajouter un profil</h2>
+                <button onclick="closeModal()" class="p-1.5 rounded-full hover:bg-gray-100 transition text-gray-500 hover:text-gray-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Corps modal -->
+            <div class="px-6 py-5 space-y-5">
+
+                <!-- Sélection du réseau -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Réseau social</label>
+                    <div class="select-wrapper">
+                        <select id="modalPlatform" class="input-field w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-800 outline-none cursor-pointer">
+                            <option value="" disabled selected>Choisissez un réseau…</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="X (Twitter)">X (Twitter)</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="Site Web">Site Web</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Adresse / URL -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Adresse du profil</label>
+                    <input 
+                        id="modalUrl" 
+                        type="url" 
+                        placeholder="https://www.exemple.com/votre-profil" 
+                        class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-800 outline-none placeholder:text-gray-400"
+                    />
+                    <p id="modalError" class="text-red-500 text-xs mt-1.5 hidden">Veuillez entrer une URL valide (commençant par http:// ou https://).</p>
+                </div>
+            </div>
+
+            <!-- Footer modal -->
+            <div class="px-6 pb-6 pt-2 flex items-center justify-end gap-3">
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition">
+                    Annuler
+                </button>
+                <button id="modalConfirm" onclick="confirmProfile()" disabled class="modal-confirm-btn px-6 py-2.5 rounded-lg text-sm font-semibold text-white transition">
+                    Ajouter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const profilesList = document.getElementById('profilesList');
+        const nextBtn = document.getElementById('nextBtn');
+        const modal = document.getElementById('modal');
+        const modalPlatform = document.getElementById('modalPlatform');
+        const modalUrl = document.getElementById('modalUrl');
+        const modalError = document.getElementById('modalError');
+        const modalConfirm = document.getElementById('modalConfirm');
+
+        // ——— MODAL ———
+        function openModal() {
+            // Reset
+            modalPlatform.value = '';
+            modalUrl.value = '';
+            modalError.classList.add('hidden');
+            modalConfirm.disabled = true;
+            // Show
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => modalPlatform.focus(), 300);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Fermer en cliquant sur le backdrop
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Fermer avec Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+        });
+
+        // Activer/désactiver le bouton Ajouter
+        function validateModal() {
+            const hasPlatform = modalPlatform.value !== '';
+            const urlVal = modalUrl.value.trim();
+            const hasUrl = urlVal.length > 0;
+            const urlValid = /^https?:\/\/.+\..+/.test(urlVal);
+
+            if (hasUrl && !urlValid) {
+                modalError.classList.remove('hidden');
+            } else {
+                modalError.classList.add('hidden');
+            }
+
+            modalConfirm.disabled = !(hasPlatform && urlValid);
+        }
+
+        modalPlatform.addEventListener('change', validateModal);
+        modalUrl.addEventListener('input', validateModal);
+
+        // Confirmer avec Entrée
+        modalUrl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !modalConfirm.disabled) confirmProfile();
+        });
+
+        // ——— AJOUT PROFIL ———
+        function confirmProfile() {
+            const platform = modalPlatform.value;
+            const url = modalUrl.value.trim();
+
+            if (profilesList.classList.contains('hidden')) {
+                profilesList.classList.remove('hidden');
+            }
+
+            // Icône initiale
+            const initials = platform === 'X (Twitter)' ? 'X' : platform[0];
+            const colors = {
+                'Facebook': 'bg-blue-100 text-blue-600',
+                'LinkedIn': 'bg-sky-100 text-sky-700',
+                'Instagram': 'bg-pink-100 text-pink-600',
+                'X (Twitter)': 'bg-gray-200 text-gray-800',
+                'TikTok': 'bg-gray-900 text-white',
+                'YouTube': 'bg-red-100 text-red-600',
+                'Site Web': 'bg-emerald-100 text-emerald-700',
+                'Autre': 'bg-purple-100 text-purple-600'
+            };
+            const colorClass = colors[platform] || 'bg-gray-200 text-gray-600';
+
+            const item = document.createElement('div');
+            item.className = 'profile-item w-full bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center justify-between';
+            item.innerHTML = `
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 ${colorClass} rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                        ${initials}
+                    </div>
+                    <div class="text-sm text-left min-w-0">
+                        <div class="font-semibold text-gray-900">${platform}</div>
+                        <div class="text-gray-500 text-xs truncate max-w-[260px]" title="${url}">${url}</div>
+                    </div>
+                </div>
+                <button onclick="removeProfile(this)" class="text-gray-400 hover:text-red-500 transition shrink-0 ml-2 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            `;
+            
+            profilesList.appendChild(item);
+            enableNext();
+            closeModal();
+        }
+
+        function removeProfile(btn) {
+            btn.closest('.profile-item').remove();
+            if (profilesList.children.length === 0) {
+                profilesList.classList.add('hidden');
+                disableNext();
+            }
+        }
+
+        function enableNext() {
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('bg-[#dddddd]', 'cursor-not-allowed');
+            nextBtn.classList.add('bg-[#222222]', 'hover:bg-black', 'shadow-md', 'active:scale-[0.98]');
+        }
+
+        function disableNext() {
+            nextBtn.disabled = true;
+            nextBtn.classList.add('bg-[#dddddd]', 'cursor-not-allowed');
+            nextBtn.classList.remove('bg-[#222222]', 'hover:bg-black', 'shadow-md', 'active:scale-[0.98]');
+        }
+    </script>
+</body>
+</html>

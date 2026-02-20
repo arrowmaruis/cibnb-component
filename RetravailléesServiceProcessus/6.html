@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Style - Étape 3 Photos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Animation d'apparition des photos */
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .photo-card {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Style pour l'illustration des photos empilées */
+        .stack-card {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Bouton Ajouter personnalisé */
+        .btn-black {
+            background-color: #222222;
+            color: white;
+            transition: transform 0.1s ease, background-color 0.2s;
+        }
+        .btn-black:active {
+            transform: scale(0.96);
+            background-color: black;
+        }
+
+        /* Zone de drag & drop active */
+        .drag-active {
+            border: 2px dashed #222222 !important;
+            background-color: #F7F7F7;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col justify-between text-[#222222] overflow-hidden" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);">
+
+    <!-- Navbar -->
+    <header class="flex items-center justify-between px-6 py-8 md:px-12 bg-white shrink-0 z-10">
+        <button class="w-8 h-8 rounded-full border border-transparent hover:bg-gray-100 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </button>
+        <div class="hidden md:block text-sm font-semibold text-center">
+            Photos <span class="mx-1 text-gray-400">•</span> Étape 3 sur 6
+        </div>
+        <button class="px-4 py-2 bg-[#F7F7F7] hover:bg-[#EBEBEB] text-sm font-semibold rounded-full transition-colors border border-transparent">
+            Enregistrer et quitter
+        </button>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 overflow-y-auto w-full max-w-[800px] mx-auto flex flex-col pt-4 pb-20 px-6 md:px-12" id="mainContainer">
+        
+        <!-- Header du contenu -->
+        <div class="mb-8 mt-4">
+            <h1 class="text-[26px] md:text-[32px] font-semibold leading-snug mb-3 text-[#222222]">
+                Ajoutez des photos qui mettent en valeur vos compétences
+            </h1>
+            <p class="text-gray-500 text-lg">
+                Ajoutez au moins 5 photos.
+            </p>
+        </div>
+
+        <!-- État Vide (Empty State) -->
+        <div id="emptyState" class="flex-1 flex flex-col items-center justify-center min-h-[400px] border border-dashed border-gray-300 rounded-xl bg-[#FAFAFA] transition-colors duration-200">
+            
+            <!-- Illustration Photos Empilées CSS -->
+            <div class="relative w-48 h-48 mb-8 flex items-center justify-center">
+                <!-- Photo arrière gauche -->
+                <div class="absolute w-32 h-36 bg-white rounded-lg stack-card transform -rotate-12 -translate-x-6 flex items-center justify-center border border-gray-100">
+                    <span class="text-4xl filter grayscale opacity-50">💅</span>
+                </div>
+                <!-- Photo arrière droite -->
+                <div class="absolute w-32 h-36 bg-white rounded-lg stack-card transform rotate-6 translate-x-6 flex items-center justify-center border border-gray-100">
+                     <span class="text-4xl filter grayscale opacity-50">💆‍♀️</span>
+                </div>
+                <!-- Photo centrale -->
+                <div class="absolute w-36 h-40 bg-white rounded-lg stack-card z-10 flex flex-col p-2 border border-gray-100">
+                    <div class="flex-1 bg-gray-100 rounded-md mb-2 overflow-hidden relative">
+                         <img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=200" class="w-full h-full object-cover opacity-80" alt="">
+                    </div>
+                    <div class="h-2 w-1/2 bg-gray-100 rounded-full"></div>
+                </div>
+            </div>
+
+            <button onclick="triggerFileInput()" class="btn-black px-6 py-3 rounded-full font-semibold text-sm flex items-center gap-2 mb-4 hover:scale-105 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Ajouter
+            </button>
+            <p class="text-xs text-gray-400">ou glissez-déposez vos photos ici</p>
+        </div>
+
+        <!-- Grille de Photos (Cachée au début) -->
+        <div id="photoGrid" class="hidden grid-cols-1 md:grid-cols-2 gap-4 pb-10">
+            <!-- La première photo prendra toute la largeur sur mobile, et une colonne sur desktop, mais le design Airbnb met souvent la 1ere en grand -->
+            <!-- Nous allons remplir ceci dynamiquement en JS -->
+        </div>
+
+        <!-- Input caché -->
+        <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="handleFiles(this.files)">
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 px-6 py-4 md:px-12 flex items-center justify-between shrink-0 sticky bottom-0 w-full z-10">
+        <!-- Barre de progression -->
+        <div class="absolute top-0 left-0 h-[2px] bg-black w-[50%] transition-all duration-500" id="progressBar"></div>
+        
+        <button class="text-sm font-semibold underline text-[#222222] hover:bg-[#F7F7F7] px-4 py-2 rounded-lg -ml-4 transition-colors">
+            Obtenir des conseils
+        </button>
+        
+        <div class="flex items-center gap-2">
+            <button class="text-sm font-semibold underline text-[#222222] hover:bg-[#F7F7F7] px-4 py-2 rounded-lg transition-colors hidden md:block">
+                Retour
+            </button>
+            <button id="nextBtn" class="bg-[#DDDDDD] text-white px-8 py-3.5 rounded-lg font-semibold cursor-not-allowed transition-all duration-200" disabled>
+                Suivant
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const emptyState = document.getElementById('emptyState');
+        const photoGrid = document.getElementById('photoGrid');
+        const nextBtn = document.getElementById('nextBtn');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        let photos = []; // Stockage des URLs des photos
+
+        function triggerFileInput() {
+            fileInput.click();
+        }
+
+        function handleFiles(files) {
+            if (!files.length) return;
+
+            // Convertir FileList en Array et créer des URLs
+            const newPhotos = Array.from(files).map(file => URL.createObjectURL(file));
+            photos = [...photos, ...newPhotos];
+            
+            updateUI();
+        }
+
+        // Drag and Drop handlers
+        function dragOverHandler(ev) {
+            ev.preventDefault();
+            emptyState.classList.add('drag-active');
+        }
+
+        function dragLeaveHandler(ev) {
+            ev.preventDefault();
+            emptyState.classList.remove('drag-active');
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            emptyState.classList.remove('drag-active');
+            
+            if (ev.dataTransfer.items) {
+                const files = [];
+                [...ev.dataTransfer.items].forEach((item) => {
+                    if (item.kind === 'file' && item.type.startsWith('image/')) {
+                        files.push(item.getAsFile());
+                    }
+                });
+                if(files.length > 0) handleFiles(files);
+            }
+        }
+
+        function deletePhoto(index) {
+            photos.splice(index, 1);
+            updateUI();
+        }
+
+        function updateUI() {
+            // Basculer entre État Vide et Grille
+            if (photos.length > 0) {
+                emptyState.classList.add('hidden');
+                photoGrid.classList.remove('hidden');
+                photoGrid.classList.add('grid');
+            } else {
+                emptyState.classList.remove('hidden');
+                photoGrid.classList.add('hidden');
+                photoGrid.classList.remove('grid');
+            }
+
+            // Reconstruire la grille
+            renderGrid();
+
+            // Validation du bouton Suivant
+            if (photos.length >= 5) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-[#DDDDDD]', 'cursor-not-allowed');
+                nextBtn.classList.add('bg-[#222222]', 'hover:bg-black', 'hover:scale-[1.02]');
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('bg-[#DDDDDD]', 'cursor-not-allowed');
+                nextBtn.classList.remove('bg-[#222222]', 'hover:bg-black', 'hover:scale-[1.02]');
+            }
+        }
+
+        function renderGrid() {
+            photoGrid.innerHTML = '';
+
+            photos.forEach((src, index) => {
+                const div = document.createElement('div');
+                
+                // La première photo est la "Couverture" (span-2 si possible pour le style)
+                let classes = "photo-card relative aspect-[4/3] rounded-xl overflow-hidden border border-gray-200 group bg-gray-100";
+                if (index === 0) classes += " md:col-span-2 md:aspect-[16/9]"; 
+                
+                div.className = classes;
+
+                div.innerHTML = `
+                    <img src="${src}" class="w-full h-full object-cover" alt="Photo ${index + 1}">
+                    <div class="absolute top-2 left-2 bg-white px-2 py-1 rounded-md text-xs font-bold shadow-sm ${index === 0 ? 'block' : 'hidden'}">Photo de couverture</div>
+                    <button onclick="deletePhoto(${index})" class="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                `;
+                photoGrid.appendChild(div);
+            });
+
+            // Ajouter la carte "Ajouter plus" à la fin de la grille
+            const addMoreDiv = document.createElement('div');
+            addMoreDiv.className = "aspect-[4/3] rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-black hover:bg-gray-50 transition-colors bg-white";
+            addMoreDiv.onclick = triggerFileInput;
+            addMoreDiv.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2 text-gray-400"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span class="text-sm font-medium text-gray-600">Ajouter d'autres</span>
+            `;
+            photoGrid.appendChild(addMoreDiv);
+        }
+    </script>
+</body>
+</html>

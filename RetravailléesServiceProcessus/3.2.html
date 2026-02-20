@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos de vous — Qualifications</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Manrope', sans-serif; background:#F7F7F7; }
+
+    /* Animation de la modale */
+    .modal-backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-backdrop.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .modal-panel {
+        transform: scale(0.95) translateY(10px);
+        opacity: 0;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .modal-backdrop.active .modal-panel {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="h-screen w-screen flex items-center justify-center p-4">
+  
+  <!-- Main container -->
+  <div class="bg-white w-full max-w-[1100px] h-[600px] rounded-xl flex flex-col relative border border-gray-200 overflow-hidden shadow-sm">
+
+    <!-- Header -->
+    <div class="h-20 px-6 md:px-8 flex items-center justify-between shrink-0 bg-white z-20">
+      <button class="p-2 rounded-full hover:bg-gray-100 transition cursor-pointer text-gray-800 -ml-2" aria-label="Retour">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false"
+          style="display:block; fill:none; height:16px; width:16px; stroke:currentcolor; stroke-width:4; overflow:visible;">
+          <path d="m20 28-11.29289322-11.2928932c-.39052429-.3905243-.39052429-1.0236893 0-1.4142136l11.29289322-11.2928932"></path>
+        </svg>
+      </button>
+
+      <div class="text-xs font-semibold text-gray-800 uppercase tracking-wider">
+        À propos de vous &nbsp;•&nbsp; Étape 1 sur 6
+      </div>
+
+      <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-full transition text-gray-800">
+        Enregistrer et quitter
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto px-6 md:px-20 pb-10 flex flex-col items-center justify-center text-center">
+      
+      <div class="w-16 h-16 bg-[#181818] rounded-full flex items-center justify-center text-white text-2xl font-medium mb-6">
+        D
+      </div>
+
+      <h1 class="text-2xl md:text-[32px] font-bold text-gray-900 mb-2 leading-tight">
+        Décrivez vos qualifications
+      </h1>
+      
+      <p class="text-gray-500 text-base md:text-lg mb-10 max-w-lg">
+        Aidez les voyageurs à mieux vous connaître.
+      </p>
+
+      <!-- Interactive List Items -->
+      <div class="w-full max-w-md space-y-4 text-left">
+        
+        <!-- Item 1: Expérience -->
+        <button onclick="openModal('experience')" class="w-full group flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition cursor-pointer border border-transparent hover:border-gray-200">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                 <path d="M4 22h16"></path>
+                 <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                 <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                 <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+               </svg>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="font-semibold text-gray-900 text-sm md:text-base">Expérience</span>
+              <!-- ID ajouté pour ciblage JS -->
+              <span id="display-experience" class="text-sm text-gray-500">Ajouter une expérience...</span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-800 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        <!-- Item 2: Diplôme -->
+        <button onclick="openModal('diploma')" class="w-full group flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition cursor-pointer border border-transparent hover:border-gray-200">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-700 shrink-0">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                 <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+               </svg>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="font-semibold text-gray-900 text-sm md:text-base">Diplôme</span>
+              <!-- ID ajouté pour ciblage JS -->
+              <span id="display-diploma" class="text-sm text-gray-500">Ajouter un diplôme...</span>
+            </div>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-800 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="h-24 px-6 md:px-8 border-t border-gray-200 flex items-center justify-between shrink-0 bg-white">
+      <button class="text-sm font-semibold text-gray-800 hover:text-gray-600 transition underline">
+        Obtenir des conseils
+      </button>
+
+      <button class="bg-[#222222] hover:bg-black text-white px-8 py-3.5 rounded-lg font-semibold text-lg transition active:scale-[0.98]">
+        Suivant
+      </button>
+    </div>
+
+  </div>
+
+  <!-- FENÊTRE MODALE (Popup) -->
+  <div id="editModal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Panel -->
+    <div class="modal-panel bg-white w-full max-w-[500px] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        
+        <!-- Header Modal -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 id="modalTitle" class="text-lg font-bold text-gray-900">Modifier</h3>
+            <button onclick="closeModal()" class="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Body Modal -->
+        <div class="p-6">
+            <label id="modalLabel" class="block text-sm font-semibold text-gray-700 mb-2">Détails</label>
+            
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="modalInput" 
+                    maxlength="50"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 pr-16 text-gray-800 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition"
+                    placeholder="Ex: Gérant de boutique..."
+                    oninput="updateCharCount(this)"
+                >
+                <!-- Compteur de caractères -->
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
+                    <span id="charCount">0</span>/50
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Soyez bref et concis.</p>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+            <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-200 transition">
+                Annuler
+            </button>
+            <button onclick="saveData()" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-black hover:bg-gray-800 transition shadow-sm">
+                Enregistrer
+            </button>
+        </div>
+    </div>
+  </div>
+
+  <script>
+      const modal = document.getElementById('editModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalLabel = document.getElementById('modalLabel');
+      const modalInput = document.getElementById('modalInput');
+      const charCountSpan = document.getElementById('charCount');
+      
+      let currentType = ''; // 'experience' ou 'diploma'
+
+      // Configuration des textes selon le type
+      const config = {
+          experience: {
+              title: "Votre expérience",
+              label: "Intitulé du poste ou de l'activité",
+              placeholder: "Ex: Gérant Boutique Manicure",
+              targetId: "display-experience"
+          },
+          diploma: {
+              title: "Votre diplôme",
+              label: "Intitulé du diplôme ou certificat",
+              placeholder: "Ex: Certificat manucure Pieds et Ongles",
+              targetId: "display-diploma"
+          }
+      };
+
+      function openModal(type) {
+          currentType = type;
+          const conf = config[type];
+          
+          // Mise à jour des textes de la modale
+          modalTitle.textContent = conf.title;
+          modalLabel.textContent = conf.label;
+          modalInput.placeholder = conf.placeholder;
+          
+          // Récupérer la valeur actuelle si elle n'est pas par défaut
+          const currentVal = document.getElementById(conf.targetId).innerText;
+          if(currentVal.includes("Ajouter")) {
+              modalInput.value = "";
+          } else {
+              modalInput.value = currentVal;
+          }
+
+          updateCharCount(modalInput);
+
+          // Afficher la modale
+          modal.classList.add('active');
+          
+          // Focus automatique
+          setTimeout(() => modalInput.focus(), 100);
+      }
+
+      function closeModal() {
+          modal.classList.remove('active');
+      }
+
+      function updateCharCount(input) {
+          charCountSpan.textContent = input.value.length;
+          
+          // Changement de couleur si proche de la limite
+          if (input.value.length >= 45) {
+              charCountSpan.classList.add('text-red-500');
+              charCountSpan.classList.remove('text-gray-400');
+          } else {
+              charCountSpan.classList.remove('text-red-500');
+              charCountSpan.classList.add('text-gray-400');
+          }
+      }
+
+      function saveData() {
+          const value = modalInput.value.trim();
+          const targetId = config[currentType].targetId;
+          const displayElement = document.getElementById(targetId);
+
+          if (value) {
+              displayElement.textContent = value;
+              displayElement.classList.remove('text-gray-400', 'italic');
+              displayElement.classList.add('text-gray-600');
+          } else {
+              // Si vide, remettre le texte par défaut
+              if(currentType === 'experience') displayElement.textContent = "Ajouter une expérience...";
+              if(currentType === 'diploma') displayElement.textContent = "Ajouter un diplôme...";
+          }
+
+          closeModal();
+      }
+
+      // Fermer avec Escape
+      document.addEventListener('keydown', function(event) {
+          if (event.key === "Escape" && modal.classList.contains('active')) {
+              closeModal();
+          }
+          if (event.key === "Enter" && modal.classList.contains('active')) {
+              saveData();
+          }
+      });
+      
+      // Fermer au clic en dehors
+      modal.addEventListener('click', function(event) {
+          if (event.target === modal) {
+              closeModal();
+          }
+      });
+  </script>
+
+</body>
+</html>
